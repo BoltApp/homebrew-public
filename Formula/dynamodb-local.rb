@@ -23,6 +23,7 @@ class DynamodbLocal < Formula
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-X}"
     export DYNAMODB_LOCAL_PATH="${DYNAMODB_LOCAL_PATH:-$HOME/.localdev/dynamodb}"
 
+    mkdir -p $DYNAMODB_LOCAL_PATH
     exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar -sharedDb -dbPath $DYNAMODB_LOCAL_PATH $@
     EOS
   end
