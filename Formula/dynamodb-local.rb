@@ -16,7 +16,14 @@ class DynamodbLocal < Formula
 
   def bin_wrapper; <<~EOS
     #!/bin/sh
-    cd #{data_path} && JAVA_HOME="${JAVA_HOME:-#{ENV['HOMEBREW_PREFIX']}/opt/openjdk/libexec/openjdk.jdk/Contents/Home}" exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
+    cd #{data_path}
+    
+    export JAVA_HOME="${JAVA_HOME:-#{ENV['HOMEBREW_PREFIX']}/opt/openjdk/libexec/openjdk.jdk/Contents/Home}"
+    export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID:-X}"
+    export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-X}"
+    export DYNAMODB_LOCAL_PATH="${DYNAMODB_LOCAL_PATH:-$HOME/.localdev/dynamodb}"
+
+    exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar -sharedDb -dbPath $DYNAMODB_LOCAL_PATH $@
     EOS
   end
 
@@ -28,7 +35,7 @@ class DynamodbLocal < Formula
 
   def post_install
     data_path.mkpath
-    if RUBY_PLATFORM =~ /arm64-darwin/
+    if RUBY_PLATFORM =~ /arm64.*darwin/
       # https://stackoverflow.com/questions/66635424/dynamodb-local-setup-on-m1-apple-silicon-mac
       system "wget", "-O", "#{libexec}/DynamodbLocal_lib/libsqlite4java-osx.dylib", "https://repo1.maven.org/maven2/io/github/ganadist/sqlite4java/libsqlite4java-osx-aarch64/1.0.392/libsqlite4java-osx-aarch64-1.0.392.dylib"
     end
