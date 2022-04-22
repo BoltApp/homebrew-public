@@ -6,6 +6,8 @@ class DynamodbLocal < Formula
 
   bottle :unneeded
 
+  depends_on "openjdk"
+
   def data_path
     var/"data/dynamodb-local"
   end
@@ -16,7 +18,7 @@ class DynamodbLocal < Formula
 
   def bin_wrapper; <<~EOS
     #!/bin/sh
-    cd #{data_path} && exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
+    cd #{data_path} && JAVA_HOME="${JAVA_HOME:-#{ENV['HOMEBREW_PREFIX']}/opt/openjdk.jdk/Contents/Home}" exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
     EOS
   end
 
