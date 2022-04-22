@@ -16,18 +16,22 @@ class DynamodbLocal < Formula
 
   def bin_wrapper; <<~EOS
     #!/bin/sh
-    cd #{data_path} && JAVA_HOME="${JAVA_HOME:-#{ENV['HOMEBREW_PREFIX']}/opt/openjdk.jdk/Contents/Home}" exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
+    cd #{data_path} && JAVA_HOME="${JAVA_HOME:-#{ENV['HOMEBREW_PREFIX']}/opt/openjdk/libexec/openjdk.jdk/Contents/Home}" exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
     EOS
   end
 
   def install
-    prefix.install %w[LICENSE.txt README.txt third_party_licenses]
+    prefix.install %w[LICENSE.txt README.txt THIRD-PARTY-LICENSES.txt]
     libexec.install %w[DynamoDBLocal_lib DynamoDBLocal.jar]
     (bin/"dynamodb-local").write(bin_wrapper)
   end
 
   def post_install
     data_path.mkpath
+    if RUBY_PLATFORM =~ /arm64-darwin/
+      # https://stackoverflow.com/questions/66635424/dynamodb-local-setup-on-m1-apple-silicon-mac
+      system "wget", "-O", "#{libexec}/DynamodbLocal_lib/libsqlite4java-osx.dylib", "https://repo1.maven.org/maven2/io/github/ganadist/sqlite4java/libsqlite4java-osx-aarch64/1.0.392/libsqlite4java-osx-aarch64-1.0.392.dylib"
+    end
   end
 
   def caveats; <<~EOS
@@ -40,6 +44,9 @@ class DynamodbLocal < Formula
 
     Data: #{data_path}
     Logs: #{log_path}
+
+    Note: on M1s an additional native library is installed for sqlite4java
+      detected architecture is: #{RUBY_PLATFORM}
     EOS
   end
 
