@@ -4,8 +4,6 @@ class DynamodbLocal < Formula
   homepage "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html"
   head "https://s3.us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz"
 
-  bottle :unneeded
-
   depends_on "openjdk"
 
   def data_path
