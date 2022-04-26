@@ -5,6 +5,7 @@ class DynamodbLocal < Formula
   head "https://s3.us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz"
 
   depends_on "openjdk"
+  depends_on "wget"
 
   def data_path
     var/"data/dynamodb-local"
