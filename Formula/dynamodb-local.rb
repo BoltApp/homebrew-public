@@ -76,6 +76,8 @@ class DynamodbLocal < Formula
       <array>
         <string>#{opt_bin}/dynamodb-local</string>
       </array>
+      <key>StandardOutPath</key>
+      <string>#{log_path}</string>
       <key>StandardErrorPath</key>
       <string>#{log_path}</string>
     </dict>
