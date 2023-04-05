@@ -60,7 +60,7 @@ class DynamodbLocal < Formula
     EOS
   end
 
-  plist_options :manual => "#{HOMEBREW_PREFIX}/bin/dynamodb-local"
+  service.require_root :manual => "#{HOMEBREW_PREFIX}/bin/dynamodb-local"
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
