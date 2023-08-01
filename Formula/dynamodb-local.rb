@@ -60,30 +60,10 @@ class DynamodbLocal < Formula
     EOS
   end
 
-  plist_options :manual => "#{HOMEBREW_PREFIX}/bin/dynamodb-local"
-
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>KeepAlive</key>
-      <false/>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/dynamodb-local</string>
-      </array>
-      <key>StandardOutPath</key>
-      <string>#{log_path}</string>
-      <key>StandardErrorPath</key>
-      <string>#{log_path}</string>
-    </dict>
-    </plist>
-    EOS
+  service do
+    run [opt_bin/"dynamodb-local"]
+    log_path log_path
+    error_log_path log_path
   end
 
   test do
